@@ -31,7 +31,11 @@ const postUserController = (req, res) => {
     const data = req.body;
     createUser(data, (err, result) => {
         if (err) {
-            console.log(err);
+            const errRes = error[err.code];
+            res.status(errRes.status).json({
+                success: 0,
+                message: errRes.message,
+            });
         } else if (result.affectedRows) {
             res.json({ success: 1, message: 'User created !' });
         }

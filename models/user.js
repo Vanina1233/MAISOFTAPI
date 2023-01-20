@@ -1,7 +1,9 @@
 const { connection } = require('../config/db');
 const { v4: uuidv4 } = require('uuid');
+const { generateUserName } = require('../utils/username');
 
 const createUser = (data, callback) => {
+    const username = generateUserName(data.email);
     connection.query(
         'INSERT INTO `user` (`id`, `firstname`, `lastname`, `email` ,`hash`, `username`, `country`, `address`,`phone`,`created_at`,`updated_at`, `type`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
         [
@@ -10,13 +12,13 @@ const createUser = (data, callback) => {
             data.lastname,
             data.email,
             data.hash,
-            data.username,
+            username,
             data.country,
             data.address,
             data.phone,
             new Date(),
             new Date(),
-            data.type
+            data.type || 'CLIENT'
         ],
         (err, res) => {
             if (err) {
@@ -50,18 +52,13 @@ const readUserById = (id, callback) => {
 
 const updateUser = (data, callback) => {
     connection.query(
-        'UPDATE `user` SET  `firstname` = ?, `lastname` = ?, `email` = ?,`hash` = ?, `username` = ?, `country`= ?, `address` =?, `phone` = ? , `updatedAt` = ?, `type` = ? WHERE   id = ? ',
+        'UPDATE `user` SET  `firstname` = ?, `lastname` = ?,`username` = ?,`phone` = ? , `updatedAt` = ? WHERE   id = ? ',
         [
             data.firstname,
             data.lastname,
-            data.email,
-            data.hash,
             data.username,
-            data.country,
-            data.address,
             data.phone,
             new Date(),
-            data.type,
             data.id,
         ],
         (err, res) => {

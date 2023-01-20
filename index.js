@@ -7,6 +7,7 @@ const env = require('./config/env');
 //routers
 const userRouter = require('./routes/user');
 const supplierRouter = require('./routes/supplier');
+const paymentRouter = require('./routes/payment');
 
 connection.connect((err) => {
     if (err) {
@@ -20,6 +21,7 @@ app.use(express.json());
 
 app.use('/api/user', userRouter);
 app.use('/api/supplier', supplierRouter);
+app.use('/api/payment', paymentRouter);
 
 app.listen(env.port, () => {
     console.log(`maisoft running on port: ${env.port}`);
