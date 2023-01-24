@@ -4,10 +4,11 @@ const { generateUserName } = require('../utils/username');
 
 const createUser = (data, callback) => {
     const username = generateUserName(data.email);
+    const id = uuidv4();
     connection.query(
         'INSERT INTO `user` (`id`, `firstname`, `lastname`, `email` ,`hash`, `username`, `country`, `address`,`phone`,`created_at`,`updated_at`, `type`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
         [
-            uuidv4(),
+            id,
             data.firstname,
             data.lastname,
             data.email,
@@ -24,7 +25,7 @@ const createUser = (data, callback) => {
             if (err) {
                 callback(err, null);
             } else {
-                callback(null, res);
+                callback(null, { ...res, id });
             }
         }
     );
@@ -48,6 +49,20 @@ const readUserById = (id, callback) => {
             callback(null, res);
         }
     });
+};
+
+const readUserByEmail = (email, callback) => {
+    connection.query(
+        'SELECT * FROM `user` WHERE email = ?',
+        [email],
+        (err, res) => {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, res);
+            }
+        }
+    );
 };
 
 const updateUser = (data, callback) => {
@@ -87,4 +102,5 @@ module.exports = {
     readUserById,
     updateUser,
     deleteUser,
+    readUserByEmail
 };

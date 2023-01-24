@@ -7,12 +7,13 @@ const {
     deletePaymentController,
 } = require('../controllers/payment');
 
+const { checkAuth } = require('../controllers/check-auth');
 const router = Router();
 
-router.get('/', getPaymentController);
-router.get('/:id', getPaymentByIdController);
-router.post('/', postPaymentController);
-router.patch('/', patchPaymentController);
-router.delete('/:id', deletePaymentController);
+router.get('/', checkAuth, getPaymentController);
+router.get('/:id', checkAuth, getPaymentByIdController);
+router.post('/', checkAuth, postPaymentController);
+router.patch('/', checkAuth, patchPaymentController);
+router.delete('/:id', checkAuth, deletePaymentController);
 
 module.exports = router;
